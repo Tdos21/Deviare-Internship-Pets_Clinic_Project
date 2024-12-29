@@ -15,10 +15,11 @@ pipeline {
         }
 
         stage('Build') {
-            steps {
-                echo 'Building the project...'
-                sh './mvnw clean install' // Adjust if using a different build tool
-            }
+               steps {
+                   echo 'Building the project...'
+                   sh 'chmod +x ./mvnw'
+                   sh './mvnw clean install'
+          }
         }
 
         stage('Test') {
