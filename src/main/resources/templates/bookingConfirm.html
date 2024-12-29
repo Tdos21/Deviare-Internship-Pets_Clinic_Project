@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Owner Dashboard</title>
+</head>
+<body>
+    <h1>Owner Dashboard</h1>
+    <p th:text="${message}"></p>
+    <div th:if="${consultation}">
+        <p>Consultation ID: <span th:text="${consultation.id}"></span></p>
+        <p>Total Cost: $<span th:text="${consultation.consultTotalCost}"></span></p>
+    </div>
+</body>
+</html>

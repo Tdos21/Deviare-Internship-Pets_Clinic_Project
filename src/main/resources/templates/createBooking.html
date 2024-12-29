@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pet Consultation Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: #555;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Book a Consultation for Your Pet</h1>
+        <form action="/api/createAppoint" method="post">
+            <!-- Owner Dropdown -->
+            <label for="owner">Owner:</label>
+            <select name="owner" id="owner" required>
+                <option value="" disabled selected>Select Owner</option>
+                <th:block th:each="owner : ${owners}">
+                    <option th:value="${owner.ownerId}" th:text="${owner.OwnerFullName}"></option>
+                </th:block>
+            </select>
+
+            <!-- Pet Dropdown -->
+            <label for="pet">Pet:</label>
+            <select name="pet" id="pet" required>
+                <option value="" disabled selected>Select Pet</option>
+                <th:block th:each="pet : ${pets}">
+                    <option th:value="${pet.petId}" th:text="${pet.petName}"></option>
+                </th:block>
+            </select>
+
+            <!-- Sickness Dropdown -->
+            <label for="sickness">Sickness:</label>
+            <select name="sickness" id="sickness" required>
+                <option value="" disabled selected>Select Sickness</option>
+                <th:block th:each="sick : ${sicknesses}">
+                    <option th:value="${sick.sickId}" th:text="${sick.sickName}"></option>
+                </th:block>
+            </select>
+
+           
+            
+
+            <!-- Submit Button -->
+            <button type="submit">Book Consultation</button>
+        </form>
+    </div>
+</body>
+</html>

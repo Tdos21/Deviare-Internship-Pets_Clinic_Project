@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error</title>
+</head>
+<body>
+    <h1>An error occurred</h1>
+    
+    <p th:text="${message}">Error message will appear here</p>
+
+    <h2>Details:</h2>
+    <p th:text="${exception}">Exception details will appear here</p>
+
+    <h3>Stack Trace:</h3>
+    <pre th:text="${stackTrace}">Stack trace will appear here</pre>
+
+   
+</body>
+</html>
