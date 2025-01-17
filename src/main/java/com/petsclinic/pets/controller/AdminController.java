@@ -73,7 +73,7 @@ public class AdminController {
             return "adminDashboard"; // Redirect to admin dashboard
         } else {
             model.addAttribute("error", "Invalid username or password.");
-            return "login"; // Reload login page with error message
+            return "adminLogin"; // Reload login page with error message
         }
     }
     

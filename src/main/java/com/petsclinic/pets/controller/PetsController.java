@@ -12,39 +12,50 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import com.petsclinic.pets.model.Owner;
 import com.petsclinic.pets.model.Pet;
 import com.petsclinic.pets.model.PetSicknesses;
 import com.petsclinic.pets.service.PetService;
 
+import jakarta.servlet.http.HttpSession;
+
 
 
 @Controller
-@RequestMapping("/pets")
+@RequestMapping(path="/pets")
 public class PetsController {
 
-    @Autowired
-    private PetService petService;
+	@Autowired
+	private PetService petService;
 
-    @PostMapping("/createPet")
-    public String addPet(
-            @ModelAttribute Pet pet, 
-            @AuthenticationPrincipal UserDetails loggedInUser, 
-            Model model) {
-        // Assuming the logged-in user has an 'ownerId' associated with their account
-        int ownerId = Integer.parseInt(loggedInUser.getUsername());  // Assumes the 'username' is the 'ownerId'
+	@PostMapping(path="/createPet")
+	public String addPet(
+	        @ModelAttribute Pet pet,
+	        HttpSession session, // Use HttpSession to retrieve logged-in user
+	        Model model) {
+	    // Retrieve the logged-in owner from the session
+	    Owner loggedInOwner = (Owner) session.getAttribute("loggedInOwner");
 
-        try {
-            // Save the pet by passing the ownerId to the service
-            petService.registerPet(pet, ownerId);
-        } catch (Exception e) {
-            e.printStackTrace();
-            model.addAttribute("errorMessage", "Failed to save pet. Please try again.");
-            return "createPet";  // Redirect back to the form in case of error
-        }
+	    if (loggedInOwner == null) {
+	        // If no user is in session, redirect to the login page
+	        model.addAttribute("errorMessage", "You must be logged in to create a pet.");
+	        return "ownerLogin";  // Redirect to the login page
+	    }
 
-        // Redirect to the owner dashboard
-        return "ownerDashboard";  // Replace with the correct URL for the dashboard
-    }
+	    try {
+	        // Get the ownerId from the logged-in owner and register the pet
+	        int ownerId = loggedInOwner.getOwnerId();
+	        petService.registerPet(pet, ownerId);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        model.addAttribute("errorMessage", "Failed to save pet. Please try again.");
+	        return "createPetForm";  // Redirect back to the form in case of error
+	    }
+
+	    // Redirect to the owner dashboard upon successful registration
+	    return "ownerDashboard";  // Replace with the correct URL for the dashboard
+	}
+
 
 
     @PutMapping("/edit/{petId}")
@@ -58,6 +69,23 @@ public class PetsController {
 		}
         return ResponseEntity.ok(updatedPet);
     }
+    
+    @GetMapping("/get/{petId}")
+    public ResponseEntity<?> getPetById(@PathVariable Integer petId) {
+        Pet pet = null;
+        try {
+            // Fetch the pet details by petId
+            pet = petService.getPetById(petId);
+            if (pet == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pet not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching the pet details.");
+        }
+        return ResponseEntity.ok(pet);
+    }
+
 
     @GetMapping("/all")
     public ResponseEntity<?> getAllPets() {

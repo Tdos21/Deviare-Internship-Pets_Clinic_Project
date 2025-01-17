@@ -37,20 +37,22 @@ public class Owner {
 	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
     private List<BookConsultation> bookings;
 	
-    public Owner() {
-		
-	}
 	
+	//Default Constructor
+    public Owner() {
+    	
+    }
     
-    public Owner(Integer ownerId, String ownerFullName, String phone, String ownerAddress, boolean isEmployed, String email,
+    //Parameterized Constructor
+    public Owner(Integer ownerId, String ownerFullName, String phone, String email, String ownerAddress, boolean isEmployed,
 			String password) {
 		
 		this.ownerId = ownerId;
 		OwnerFullName = ownerFullName;
 		this.phone = phone;
+		this.email = email;
 		this.ownerAddress = ownerAddress;
 		this.isEmployed = isEmployed;
-		this.email = email;
 		this.password = password;
 		
 	}

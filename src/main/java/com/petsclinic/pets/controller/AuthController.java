@@ -28,43 +28,60 @@ public class AuthController {
 	
 	@Autowired
 	OwnersRepository ownerRepository;
-	
-	@PostMapping(path = "/loginRequest")
-    public String login(@RequestParam("email") String email,
-                        @RequestParam("password") String password,
-                        Model model) {
-        // Retrieve admin from the database
-        Owner admin = ownerRepository.findByEmail(email);
 
-        if (admin != null && admin.getPassword().equals(password)) {
-            return "ownerDashboard"; // Redirect to admin dashboard
-        } else {
-            model.addAttribute("error", "Invalid username or password.");
-            return "login"; // Reload login page with error message
-        }
-    }
+	@PostMapping(path = "/loginRequest")
+	public String login(@RequestParam("email") String email,
+	                    @RequestParam("password") String password,
+	                    Model model,
+	                    HttpSession session) {
+	    // Log incoming email and password
+	    System.out.println("Login attempt with email: " + email);
+	    
+	    Owner owner = ownerRepository.findByEmail(email);
+
+	    if (owner == null) {
+	        System.out.println("No owner found with email: " + email);
+	        model.addAttribute("error", "Invalid username or password.");
+	        return "ownerLogin";
+	    }
+
+	    System.out.println("Owner found: " + owner.getOwnerFullName());
+
+	    if (owner.getPassword().equals(password)) {
+	        session.setAttribute("loggedInOwner", owner);
+	        return "ownerDashboard";
+	    } else {
+	        System.out.println("Password mismatch for email: " + email);
+	        model.addAttribute("error", "Invalid username or password.");
+	        return "ownerLogin";
+	    }
+	}
+
+
     
 
 	
 	 @GetMapping("/login")
 	    public String showLoginPage(HttpSession session) {
 	        // If the user is already logged in, redirect to the homepage
-	        if (session.getAttribute("user") != null) {
+	        if (session.getAttribute("loggedInOwner") != null) {
 	            return "redirect:/ownerDashboard";  // Redirect to the homepage
 	        }
 	        return "ownerLogin";  // Otherwise, show the login page
 	    }
 
 
-	  @GetMapping(path = "/logout")
-	    public String logout(HttpServletRequest request, HttpServletResponse response) {
-	        // Invalidate the session and clear the security context
-	        SecurityContextLogoutHandler logoutHandler = new SecurityContextLogoutHandler();
-	        logoutHandler.logout(request, response, null);
+	 @GetMapping(path = "/logout")
+	 public String logout(HttpSession session) {
+	     // Invalidate the session to remove all session attributes
+	     if (session != null) {
+	         session.invalidate(); // Ends the session
+	     }
 
-	        // Redirect to the login page after logout
-	        return "redirect:/auth/login";  // Redirect to the login page after logout
-	    }
+	     // Redirect to the login page after logout
+	     return "redirect:/auth/login";
+	 }
+
     /**
    
 

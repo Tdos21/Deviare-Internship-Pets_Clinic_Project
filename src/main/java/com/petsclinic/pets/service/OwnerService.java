@@ -12,9 +12,9 @@ public class OwnerService {
     @Autowired
     private OwnersRepository ownerRepository;
 
-    public Owner registerOwner(String ownerFullName, String phone, String ownerAddress, 
-                               Boolean isEmployed, String email, String password) throws Exception {
-        Owner owner = new Owner(null, ownerFullName, phone, email, isEmployed, ownerAddress, password);
+    public Owner registerOwner(String ownerFullName, String phone,String email, String ownerAddress 
+                               , Boolean isEmployed, String password) throws Exception {
+        Owner owner = new Owner(null, ownerFullName, phone, email, ownerAddress,isEmployed, password);
         return ownerRepository.save(owner); // Save owner and return the saved instance
     }
 }

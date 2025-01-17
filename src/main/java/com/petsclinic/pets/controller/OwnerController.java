@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
+import com.petsclinic.pets.model.Admin;
 import com.petsclinic.pets.model.Owner;
 import com.petsclinic.pets.model.Response;
 import com.petsclinic.pets.repository.OwnersRepository;
@@ -41,16 +42,16 @@ public class OwnerController {
     public String registerOwner(
             @RequestParam("ownerFullName") String ownerFullName,
             @RequestParam("phone") String phone,
+            @RequestParam("email") String email,
             @RequestParam("ownerAddress") String ownerAddress,
             @RequestParam(value = "isEmployed", required = false, defaultValue = "false") Boolean isEmployed,
-            @RequestParam("email") String email,
             @RequestParam("password") String password,
             Model model, HttpSession session) {
 
         try {
-            Owner owner = ownerService.registerOwner(ownerFullName, phone, ownerAddress, isEmployed, email, password);
-            session.setAttribute("owner", owner); // Optionally store owner in session
-            return "ownerdashboard"; // Redirect to the Thymeleaf dashboard page
+            Owner owner = ownerService.registerOwner(ownerFullName, phone,email, ownerAddress, isEmployed, password);
+            session.setAttribute("loggedInOwner", owner); // Optionally store owner in session
+            return "ownerDashboard"; // Redirect to the Thymeleaf dashboard page
         } catch (Exception exception) {
             model.addAttribute("errorMessage", "User not saved: " + exception.getMessage());
             return "errorPage"; // Thymeleaf error page
@@ -72,6 +73,8 @@ public class OwnerController {
     }
 
     
+    
+    /**
     // Display the login page
     @GetMapping("/login")
     public String login() {
@@ -83,4 +86,22 @@ public class OwnerController {
     public String dashboardPage() {
         return "ownerDashboard"; // Return the dashboard page view
     }
+    
+    
+    /**
+    @PostMapping(path = "/loginRequest")
+    public String login(@RequestParam("email") String email,
+                        @RequestParam("password") String password,
+                        Model model) {
+        // Retrieve admin from the database
+        Owner owner = ownerRepository.findByEmail(email);
+
+        if (owner != null && owner.getPassword().equals(password)) {
+            return "ownerDashboard"; // Redirect to admin dashboard
+        } else {
+            model.addAttribute("error", "Invalid username or password.");
+            return "login"; // Reload login page with error message
+        }
+    }
+    **/
 }

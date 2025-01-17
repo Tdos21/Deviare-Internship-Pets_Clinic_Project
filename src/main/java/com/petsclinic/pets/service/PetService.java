@@ -53,6 +53,7 @@ public class PetService {
         pet.setPetName(petDetails.getPetName());
         pet.setPetWeight(petDetails.getPetWeight());
         pet.setPetType(petDetails.getPetType());
+        pet.setHealthy(petDetails.isHealthy());
         pet.setPetAddress(petDetails.getPetAddress());
         pet.setOwnerName(petDetails.getOwnerName()); // update the owner name if needed
         return petRepository.save(pet);
@@ -72,4 +73,11 @@ public class PetService {
 
         petRepository.deleteById(petId);
     }
+    
+    
+    public Pet getPetById(Integer petId) {
+        // Assuming the PetRepository has a findById method
+        return petRepository.findById(petId).orElse(null);
+    }
+
 }
