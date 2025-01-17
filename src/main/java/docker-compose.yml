@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  petsclinic:
+    image: petsclinic:3.0
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    networks:
+      - app-network
+
+  petsclinic_db:
+    image: mysql:8
+    environment:
+      MYSQL_ROOT_PASSWORD: 123@Ntara$!!
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
