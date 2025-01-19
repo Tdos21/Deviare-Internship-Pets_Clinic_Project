@@ -50,14 +50,16 @@ public class PetService {
         }
 
         Pet pet = petOpt.get();
+        pet.setPetId(petDetails.getPetId());
         pet.setPetName(petDetails.getPetName());
         pet.setPetWeight(petDetails.getPetWeight());
         pet.setPetType(petDetails.getPetType());
         pet.setHealthy(petDetails.isHealthy());
         pet.setPetAddress(petDetails.getPetAddress());
-        pet.setOwnerName(petDetails.getOwnerName()); // update the owner name if needed
+        pet.setOwnerName(petDetails.getOwnerName());
         return petRepository.save(pet);
     }
+
 
     // Method to get all pets
     public List<Pet> getAllPets() {

@@ -107,8 +107,8 @@
                     <td th:text="${pet.ownerName}"></td>
                     <td>
                         <!-- Add actions such as view, edit, delete -->
-                        <a th:href="@{/edit/{id}(id=${pet.petId})}">Edit</a>
-                        <a th:href="@{/delete/{id}(id=${pet.petId})}">Delete</a>
+                        <a th:href="@{/pets/editGet/{petId}(petId=${pet.petId})}">Edit</a>
+                        <a th:href="@{/pets/delete/{petId}(petId=${pet.petId})}">Delete</a>
                     </td>
                 </tr>
             </tbody>

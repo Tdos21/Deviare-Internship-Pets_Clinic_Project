@@ -58,33 +58,33 @@ public class PetsController {
 
 
 
-    @PutMapping("/edit/{petId}")
-    public ResponseEntity<?> editPet(@PathVariable Integer petId, @RequestBody Pet petDetails) {
-        Pet updatedPet = null;
-		try {
-			updatedPet = petService.editPet(petId, petDetails);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return ResponseEntity.ok(updatedPet);
-    }
+	@PutMapping("/edit/{petId}")
+	public String editPet(@PathVariable Integer petId, @ModelAttribute Pet petDetails, Model model) {
+	    System.out.println("Received petId: " + petId);
+
+	    try {
+	        Pet updatedPet = petService.editPet(petId, petDetails);
+
+	        model.addAttribute("message", "Pet details updated successfully!");
+	        return "adminDashboard"; // Redirect to adminDashboard after successful update
+	    } catch (Exception e) {
+	        model.addAttribute("error", "Error: " + e.getMessage());
+	        return "error"; // Return to error page in case of an exception
+	    }
+	}
+
+
+
+
+
     
-    @GetMapping("/get/{petId}")
-    public ResponseEntity<?> getPetById(@PathVariable Integer petId) {
-        Pet pet = null;
-        try {
-            // Fetch the pet details by petId
-            pet = petService.getPetById(petId);
-            if (pet == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pet not found");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while fetching the pet details.");
-        }
-        return ResponseEntity.ok(pet);
-    }
+	@GetMapping("/editGet/{petId}")
+	public String showEditForm(@PathVariable Integer petId, Model model) {
+	    Pet pet = petService.getPetById(petId);
+	    model.addAttribute("pet", pet);
+	    return "editPetForm"; // Replace with your actual Thymeleaf template name
+	}
+
 
 
     @GetMapping("/all")
